@@ -16,5 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag vayer-electric-frontend:$(git rev-parse --short "$GITHUB_SHA")
+    - name: Docker Login
+      run: docker login -u vayer -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
     - name: Push the Docker image
       run: docker push vayer-electric-frontend:$(git rev-parse --short "$GITHUB_SHA")
