@@ -20,4 +20,4 @@ jobs:
     - name: Docker Login
       run: docker login -u vayer -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
     - name: Push the Docker image
-      run: docker push vayer-electric-frontend:$(git rev-parse --short "$GITHUB_SHA")
+      run: docker push vayer/vayer-electric-frontend:$(git rev-parse --short "$GITHUB_SHA")
