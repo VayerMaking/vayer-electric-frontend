@@ -10,7 +10,7 @@ COPY . .
 
 ENV NODE_ENV production
 
-RUN npx build
+RUN npx run build
 
 EXPOSE 3000
 
