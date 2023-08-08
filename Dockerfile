@@ -12,7 +12,7 @@ COPY . .
 
 # RUN npm run build --production
 RUN npm install sharp --legacy-peer-deps
-RUN npm run build -- --no-prerender
+RUN npm run build
 
 EXPOSE 3000
 
