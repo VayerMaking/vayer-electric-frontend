@@ -11,7 +11,7 @@ COPY . .
 # ENV NODE_ENV production
 
 # RUN npm run build --production
-RUN npm install sharp
+RUN npm install sharp --legacy-peer-deps
 RUN npm run build
 
 EXPOSE 3000
