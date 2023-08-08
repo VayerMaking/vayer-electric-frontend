@@ -55,7 +55,7 @@ class ViewInventory extends React.Component {
                   <div className="flex items-center">
                     <Link href={`/product/${slugify(item.name)}`}>
                       <a aria-label={item.name}>
-                        <Image className="w-32 m-0" src={item.image} alt={item.name} />
+                        <Image className="w-32 m-0" src={item.image_url} alt={item.name} />
                       </a>
                     </Link>
                     <input
@@ -107,7 +107,7 @@ class ViewInventory extends React.Component {
                   <div className="flex flex-1 justify-end">
                     <p className="m-0 pl-10 text-gray-900 text-sm">In stock: {item.currentInventory}</p>
                     <p className="m-0 pl-20 text-gray-900 font-semibold">
-                      {DENOMINATION + item.price}
+                      {item.price + DENOMINATION}
                     </p>
                   </div>
                   <div className="flex items-center m-0 ml-10 text-gray-900 text-s cursor-pointer">

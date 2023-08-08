@@ -1,7 +1,7 @@
 import Image from '../Image'
 import Link from 'next/link'
 
-const DisplayMedium = ({ imageSrc, title, subtitle, link }) => {
+const DisplayMedium = ({ image_url, title, subtitle, link }) => {
   return (
     <div className="
     mb-4 lg:mb-0
@@ -9,7 +9,7 @@ const DisplayMedium = ({ imageSrc, title, subtitle, link }) => {
       <Link href={`${link}`}>
         <a aria-label={title}>
           <div className="flex flex-column justify-center items-center h-56">
-            <Image src={imageSrc} alt={title} className="w-3/5" />
+            <Image src={image_url} alt={title} className="w-3/5" />
           </div>
           <div className="mb-8">
             <p className="text-3xl font-semibold mb-1">{title}</p>

@@ -1,9 +1,9 @@
 import Image from '../Image'
 
-const Showcase = ({ imageSrc }) => {
+const Showcase = ({ image_url }) => {
   return (
     <div className="z-10">
-      <Image src={imageSrc} className="w-136" alt="Showcase item" />
+      <Image src={image_url} className="w-136" alt="Showcase item" />
     </div>
   )
 }

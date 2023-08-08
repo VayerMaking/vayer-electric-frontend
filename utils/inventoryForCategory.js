@@ -1,10 +1,12 @@
-import { fetchInventory } from './inventoryProvider'
-import { inventoryByCategory } from './inventoryByCategory'
+import axios from 'axios'
 
 async function inventoryForCategory (category) {
-  const inventory = await fetchInventory()
-  const byCategory = inventoryByCategory(inventory)
-  return byCategory[category].items
+  let res = await axios.get(`${process.env.API_URL}/products/category/${category}`)
+
+  console.log(res.data)
+
+  return res.data
+
 }
 
 export default inventoryForCategory

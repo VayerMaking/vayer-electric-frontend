@@ -7,11 +7,12 @@ import { fetchInventory } from '../../utils/inventoryProvider'
 import { slugify } from '../../utils/helpers'
 import CartLink from '../../components/CartLink'
 import { SiteContext, ContextProviderComponent } from '../../context/mainContext'
+import { fetchProductByName } from '../../utils/productProvider'
 
 const ItemView = (props) => {
   const [numberOfitems, updateNumberOfItems] = useState(1)
   const { product } = props
-  const { price, image, name, description } = product
+  const { price, image_url, name, description } = product
   const { context: { addToCart }} = props
 
   function addItemToCart (product) {
@@ -43,7 +44,7 @@ const ItemView = (props) => {
       ">
         <div className="w-full md:w-1/2 h-120 flex flex-1 bg-light hover:bg-light-200">
           <div className="py-16 p10 flex flex-1 justify-center items-center">
-            <Image src={image} alt="Inventory item" className="max-h-full" />
+            <Image src={image_url} alt="Inventory item" className="max-h-full" />
           </div>
         </div>
         <div className="pt-2 px-0 md:px-10 pb-8 w-full md:w-1/2">
@@ -84,7 +85,7 @@ export async function getStaticPaths () {
 export async function getStaticProps ({ params }) {
   const name = params.name.replace(/-/g," ")
   const inventory = await fetchInventory()
-  const product = inventory.find(item => slugify(item.name) === slugify(name))
+  const product = await fetchProductByName(name)
 
   return {
     props: {

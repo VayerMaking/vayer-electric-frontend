@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import ListItem from '../../components/ListItem'
 import { titleIfy, slugify } from '../../utils/helpers'
-import fetchCategories from '../../utils/categoryProvider'
+import {fetchCategories} from '../../utils/categoryProvider'
 import inventoryForCategory from '../../utils/inventoryForCategory'
 import CartLink from '../../components/CartLink'
 
@@ -26,12 +26,13 @@ const Category = (props) => {
               {
                 inventory.map((item, index) => {
                   return (
+                    console.log(item),
                     <ListItem
                       key={index}
                       link={`/product/${slugify(item.name)}`}
                       title={item.name}
                       price={item.price}
-                      imageSrc={item.image}
+                      image_url={item.image_url}
                     />
                   )
                 })
@@ -47,7 +48,7 @@ const Category = (props) => {
 export async function getStaticPaths () {
   const categories = await fetchCategories()
   const paths = categories.map(category => {
-    return { params: { name: slugify(category) }}
+    return { params: { name: slugify(category.name) }}
   })
   return {
     paths,
