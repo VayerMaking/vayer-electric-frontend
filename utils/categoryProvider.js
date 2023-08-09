@@ -11,12 +11,12 @@ async function fetchCategories() {
   // ]
 
   // const API_URL = 'http://localhost:8080/api'
-  let res = await axios.get(`${process.env.API_URL}/categories`)
+  let res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categories`)
   return res.data
 }
 
 async function fetchCategoriesNameArray() {
-  let res = await axios.get(`${process.env.API_URL}/categories`)
+  let res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categories`)
   // make a list of the names of the categories
   var categories = []
   res.data.forEach((category) => {

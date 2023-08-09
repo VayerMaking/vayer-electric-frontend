@@ -11,12 +11,12 @@ async function fetchProducts() {
   // ]
 
   // const API_URL = 'http://localhost:8080/api'
-  let res = await axios.get(`${process.env.API_URL}/products`)
+  let res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`)
   return res.data
 }
 
 async function fetchProductsNameArray() {
-  let res = await axios.get(`${process.env.API_URL}/products`)
+  let res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`)
   // make a list of the names of the categories
   var categories = []
   res.data.forEach((category) => {
@@ -28,13 +28,13 @@ async function fetchProductsNameArray() {
 }
 
 async function fetchProductsByCategory(category) {
-  let res = await axios.get(`${process.env.API_URL}/products/category/${category}`)
+  let res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/category/${category}`)
 
   return res.data
 }
 
 async function fetchProductByName(name) {
-  let res = await axios.get(`${process.env.API_URL}/products/${name}`)
+  let res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/${name}`)
 
   return res.data
 }

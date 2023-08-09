@@ -5,6 +5,7 @@ import Image from '../components/Image'
 import Link from 'next/link'
 import { slugify } from '../utils/helpers'
 import { FaTimes } from 'react-icons/fa'
+import { fetchProducts } from '../utils/productProvider'
 
 class ViewInventory extends React.Component {
   state = {
@@ -12,13 +13,20 @@ class ViewInventory extends React.Component {
     currentItem: {},
     editingIndex: []
   }
-  componentDidMount() {
+  async componentDidMount() {
+    console.log("mount")
     this.fetchInventory()
   }
-  fetchInventory = async() => {
-    const inventory = await fetchInventory()
-    this.setState({ inventory })
+
+  async fetchInventory() {
+    try {
+      const inventory = await fetchProducts(); // Make sure fetchProducts is correctly defined
+      this.setState({ inventory });
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
+    }
   }
+
   editItem = (item, index) => {
     const editingIndex = index
     this.setState({ editingIndex, currentItem: item })    
@@ -43,6 +51,7 @@ class ViewInventory extends React.Component {
   }
   render() {
     const { inventory, currentItem, editingIndex } = this.state
+    console.log(inventory)
     return (
       <div>
         <h2 className="text-3xl">Inventory</h2>
@@ -53,7 +62,7 @@ class ViewInventory extends React.Component {
               return (
                 <div className="border-b py-10" key={item.id}>
                   <div className="flex items-center">
-                    <Link href={`/product/${slugify(item.name)}`}>
+                    <Link href={`/products/${slugify(item.name)}`}>
                       <a aria-label={item.name}>
                         <Image className="w-32 m-0" src={item.image_url} alt={item.name} />
                       </a>
@@ -92,12 +101,12 @@ class ViewInventory extends React.Component {
             return (
               <div className="border-b py-10" key={item.id}>
                 <div className="flex items-center">
-                  <Link href={`/product/${slugify(item.name)}`}>
+                  <Link href={`/products/${slugify(item.name)}`}>
                     <a>
-                      <Image className="w-32 m-0" src={item.image} alt={item.name} />
+                      <Image className="w-32 m-0" src={item.image_url} alt={item.name} />
                     </a>
                   </Link>
-                  <Link href={`/product/${slugify(item.name)}`}>
+                  <Link href={`/products/${slugify(item.name)}`}>
                     <a>
                       <p className="m-0 pl-10 text-gray-600 text-sm">
                         {item.name}

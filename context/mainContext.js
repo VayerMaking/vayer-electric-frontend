@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify'
 import React from 'react'
-const STORAGE_KEY = 'NEXT_ECOMMERCE_STARTER_'
+const STORAGE_KEY = 'VAYER_ELECTRIC_SHOP'
 
 const initialState = {
   cart: [],
