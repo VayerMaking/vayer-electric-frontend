@@ -4,6 +4,7 @@ import { titleIfy, slugify } from '../../utils/helpers'
 import {fetchCategories} from '../../utils/categoryProvider'
 import inventoryForCategory from '../../utils/inventoryForCategory'
 import CartLink from '../../components/CartLink'
+import * as consts from '../../consts/consts'
 
 const Category = (props) => {
   const { inventory, title } = props
@@ -32,7 +33,7 @@ const Category = (props) => {
                       link={`/product/${slugify(item.name)}`}
                       title={item.name}
                       price={item.price}
-                      image_url={item.image_url}
+                      image_url={`${consts.IMAGES_BASE_URL}/${item.image_url}`}
                     />
                   )
                 })

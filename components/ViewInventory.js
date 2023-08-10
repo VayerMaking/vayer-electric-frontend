@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { slugify } from '../utils/helpers'
 import { FaTimes } from 'react-icons/fa'
 import { fetchProducts } from '../utils/productProvider'
+import * as consts from '../consts/consts'
 
 class ViewInventory extends React.Component {
   state = {
@@ -103,7 +104,7 @@ class ViewInventory extends React.Component {
                 <div className="flex items-center">
                   <Link href={`/products/${slugify(item.name)}`}>
                     <a>
-                      <Image className="w-32 m-0" src={item.image_url} alt={item.name} />
+                      <Image className="w-32 m-0" src={`${consts.IMAGES_BASE_URL}/${item.image_url}`} alt={item.name} />
                     </a>
                   </Link>
                   <Link href={`/products/${slugify(item.name)}`}>

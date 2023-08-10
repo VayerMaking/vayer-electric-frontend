@@ -1,7 +1,8 @@
 import React from 'react'
+import axios from 'axios'
 
 const initialState = {
-  name: '', brand: '', price: '', categories: [], image: '', description: '', currentInventory: ''
+  name: '', brand: '', price: '', subcategory: '', image: '', description: '', currentInventory: '', sku: ''
 }
 
 class AddInventory extends React.Component {
@@ -21,14 +22,39 @@ class AddInventory extends React.Component {
     // this.setState({ image: storageUrl  })
   }
   addItem = async () => {
-    const { name, brand, price, categories, image, description, currentInventory } = this.state
-    if (!name || !brand || !price || !categories.length || !description || !currentInventory || !image) return
+    const { name, brand, price, subcategory, image, description, currentInventory, sku } = this.state
+    if (!name || !brand || !price || !subcategory || !description || !currentInventory) return
     // add to database
+    try {
+      const data = {
+        name: name,
+        description: description,
+        subcategory: subcategory,
+        price: price,
+        current_inventory: currentInventory,
+        image: this.state.image,
+        brand: brand,
+        sku: sku
+      };
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/products`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (response.status === 200) {
+        this.clearForm()
+      }
+    } catch (error) {
+      console.error('Error making POST request:', error);
+      throw error;
+    }
+
     this.clearForm()
   }
   render() {
     const {
-      name, brand, price, categories, image, description, currentInventory
+      name, brand, price, subcategory, image, description, currentInventory, sku
     } = this.state
     return (
       <div>
@@ -83,7 +109,7 @@ class AddInventory extends React.Component {
                 </label>
                 <input
                 onChange={this.onChange}
-                value={categories} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="categories" placeholder="Comma separated list of item categories" name="categories" />
+                value={subcategory} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="subacategory" placeholder="Comma separated list of item categories" name="subcategory" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brand">
@@ -92,6 +118,14 @@ class AddInventory extends React.Component {
                 <input
                 onChange={this.onChange}
                 value={brand} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="brand" placeholder="Item brand" name="brand" />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sku">
+                  Sku
+                </label>
+                <input
+                onChange={this.onChange}
+                value={sku} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="sku" placeholder="Item sku" name="sku" />
               </div>
               <div className="flex items-center justify-between mt-4">
                 <button onClick={this.addItem} className="bg-primary hover:bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">

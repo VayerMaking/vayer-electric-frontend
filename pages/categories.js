@@ -3,6 +3,8 @@ import { titleIfy , slugify } from '../utils/helpers'
 import { DisplayMedium } from '../components'
 import CartLink from '../components/CartLink'
 import { fetchCategories } from '../utils/categoryProvider'
+import * as consts from '../consts/consts'
+
 function Categories ({ categories = [] }) {
   return (
     <>
@@ -27,7 +29,7 @@ function Categories ({ categories = [] }) {
             categories.map((category, index) => (
               <DisplayMedium
                 key={index}
-                imageSrc={category.image_url}
+                imageSrc={`${consts.IMAGES_BASE_URL}/${category.image_url}`}
                 subtitle={`${category.itemCount} items`}
                 title={titleIfy(category.name)}
                 link={`/category/${slugify(category.name)}`}
