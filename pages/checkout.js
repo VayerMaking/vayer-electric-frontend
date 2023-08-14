@@ -6,35 +6,16 @@ import { FaLongArrowAltLeft } from "react-icons/fa"
 import Link from "next/link"
 import Image from "../components/Image"
 import { v4 as uuid } from "uuid"
-
-import {
-  CardElement,
-  Elements,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js"
-import { loadStripe } from "@stripe/stripe-js"
-
-// Make sure to call `loadStripe` outside of a component’s render to avoid
-// recreating the `Stripe` object on every render.
-const stripePromise = loadStripe("xxx-xxx-xxx")
+import * as consts from '../consts/consts'
 
 function CheckoutWithContext(props) {
   return (
     <ContextProviderComponent>
       <SiteContext.Consumer>
-        {context => (
-          <Elements stripe={stripePromise}>
-            <Checkout {...props} context={context} />
-          </Elements>
-        )}
+        {context => <Checkout {...props} context={context} />}
       </SiteContext.Consumer>
     </ContextProviderComponent>
   )
-}
-
-const calculateShipping = () => {
-  return 0
 }
 
 const Input = ({ onChange, value, name, placeholder }) => (
@@ -54,51 +35,40 @@ const Checkout = ({ context }) => {
   const [input, setInput] = useState({
     name: "",
     email: "",
+    phone: "",
     street: "",
     city: "",
     postal_code: "",
     state: "",
   })
-
-  const stripe = useStripe()
-  const elements = useElements()
+  const [selectedshippingMethod, setSelectedShippingMethod] = useState('')
 
   const onChange = e => {
     setErrorMessage(null)
     setInput({ ...input, [e.target.name]: e.target.value })
   }
 
+  const calculateShipping = () => {
+    if (selectedshippingMethod === 'free') {
+      return 0
+    } else if (selectedshippingMethod === 'express') {
+      return 10
+    } else if (selectedshippingMethod === 'overnight') {
+      return 20
+    } else {
+      return 0
+    }
+  }
+
+
   const handleSubmit = async event => {
     event.preventDefault()
-    const { name, email, street, city, postal_code, state } = input
+    const { name, email, phone, street, city, postal_code, state } = input
     const { total, clearCart } = context
 
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
-      return
-    }
-
     // Validate input
-    if (!street || !city || !postal_code || !state) {
+    if (!street || !city || !postal_code || !state || !phone) {
       setErrorMessage("Please fill in the form!")
-      return
-    }
-
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
-    const cardElement = elements.getElement(CardElement)
-
-    // Use your card Element with other Stripe.js APIs
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-      billing_details: { name: name },
-    })
-
-    if (error) {
-      setErrorMessage(error.message)
       return
     }
 
@@ -162,7 +132,7 @@ const Checkout = ({ context }) => {
                     <div className="flex items-center">
                       <Image
                         className="w-32 m-0"
-                        src={item.image_url}
+                        src={`${consts.IMAGES_BASE_URL}/${item.image_url}`}
                         alt={item.name}
                       />
                       <p className="m-0 pl-10 text-gray-600">
@@ -180,49 +150,72 @@ const Checkout = ({ context }) => {
             </div>
             <div className="flex flex-1 flex-col md:flex-row">
               <div className="flex flex-1 pt-8 flex-col">
-                <div className="mt-4 border-t pt-10">
+                <div className="mt-4 border-t pt-10 border-gray-300">
                   <form onSubmit={handleSubmit}>
                     {errorMessage ? <span>{errorMessage}</span> : ""}
-                    <Input
-                      onChange={onChange}
-                      value={input.name}
-                      name="name"
-                      placeholder="Cardholder name"
-                    />
-                    <CardElement className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                    <Input
-                      onChange={onChange}
-                      value={input.email}
-                      name="email"
-                      placeholder="Email"
-                    />
-                    <Input
-                      onChange={onChange}
-                      value={input.street}
-                      name="street"
-                      placeholder="Street"
-                    />
-                    <Input
-                      onChange={onChange}
-                      value={input.city}
-                      name="city"
-                      placeholder="City"
-                    />
-                    <Input
-                      onChange={onChange}
-                      value={input.state}
-                      name="state"
-                      placeholder="State"
-                    />
+                    <div className="grid grid-cols-1 gap-y-4 md:grid-cols-3">
+                      <div>
+                        <Input
+                          onChange={onChange}
+                          value={input.name}
+                          name="name"
+                          placeholder="Name"
+                        />
+                      </div>
+                      <div>
+                        <Input
+                          onChange={onChange}
+                          value={input.email}
+                          name="email"
+                          placeholder="Email"
+                        />
+                      </div>
+                      <div>
+                        <Input
+                          onChange={onChange}
+                          value={input.phone}
+                          name="phone"
+                          placeholder="Phone"
+                        />
+                      </div>
+                    </div>
+
+
+                    <div>
+                      <Input
+                        onChange={onChange}
+                        value={input.street}
+                        name="street"
+                        placeholder="Street"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        onChange={onChange}
+                        value={input.city}
+                        name="city"
+                        placeholder="City"
+                      />
+                    </div>
                     <Input
                       onChange={onChange}
                       value={input.postal_code}
                       name="postal_code"
                       placeholder="Postal Code"
                     />
+                    <select
+                      className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
+                      value={selectedshippingMethod}
+                      onChange={e => setSelectedShippingMethod(e.target.value)}
+                      placeholder="Shipping Method"
+                    >
+                      <option label="Shipping Method" disabled></option>
+                      <option value="free">Free Shipping</option>
+                      <option value="express">Express Shipping</option>
+                      <option value="overnight">Overnight Shipping</option>
+                    </select>
                     <button
                       type="submit"
-                      disabled={!stripe}
                       onClick={handleSubmit}
                       className="hidden md:block bg-primary hover:bg-black text-white font-bold py-2 px-4 mt-4 rounded focus:outline-none focus:shadow-outline"
                       type="button"
@@ -242,18 +235,17 @@ const Checkout = ({ context }) => {
                 <div className="pl-4 flex flex-1 my-2">
                   <p className="text-sm pr-10">Shipping</p>
                   <p className="w-38 flex justify-end">
-                    FREE SHIPPING
+                    {calculateShipping(selectedshippingMethod) + DENOMINATION}
                   </p>
                 </div>
                 <div className="md:ml-4 pl-2 flex flex-1 bg-gray-200 pr-4 pb-1 pt-2 mt-2">
                   <p className="text-sm pr-10">Total</p>
                   <p className="font-semibold w-38 flex justify-end">
-                    {(total + calculateShipping()) + DENOMINATION}
+                    {(total + calculateShipping(selectedshippingMethod)) + DENOMINATION}
                   </p>
                 </div>
                 <button
                   type="submit"
-                  disabled={!stripe}
                   onClick={handleSubmit}
                   className="md:hidden bg-primary hover:bg-black text-white font-bold py-2 px-4 mt-4 rounded focus:outline-none focus:shadow-outline"
                   type="button"
@@ -265,7 +257,7 @@ const Checkout = ({ context }) => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   )
 }
 
