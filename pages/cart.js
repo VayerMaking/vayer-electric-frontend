@@ -8,6 +8,7 @@ import QuantityPicker from '../components/QuantityPicker'
 import Image from '../components/Image'
 import Head from 'next/head'
 import CartLink from '../components/CartLink'
+import * as consts from '../consts/consts'
 
 const Cart = ({ context }) => {
   const [renderClientSideComponent, setRenderClientSideComponent] = useState(false)
@@ -62,7 +63,7 @@ const Cart = ({ context }) => {
                           <div className="flex items-center hidden md:flex">
                             <Link href={`/product/${slugify(item.name)}`}>
                               <a aria-label={item.name}>
-                                <Image className="w-32 m-0" src={item.image_url} alt={item.name} />
+                                <Image className="w-32 m-0" src={`${consts.IMAGES_BASE_URL}/${item.image_url}`} alt={item.name} />
                               </a>
                             </Link>
                             <Link href={`/product/${slugify(item.name)}`}>
@@ -96,7 +97,7 @@ const Cart = ({ context }) => {
                           <div className="flex items-center flex md:hidden">
                             <Link href={`/product/${slugify(item.name)}`}>
                               <a>
-                                <Image className="w-32 m-0" src={item.image_url} alt={item.name} />
+                                <Image className="w-32 m-0" src={`${consts.IMAGES_BASE_URL}/${item.image_url}`} alt={item.name} />
                               </a>
                             </Link>
                             <div>

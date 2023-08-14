@@ -139,6 +139,9 @@ const Checkout = ({ context }) => {
                         {item.name}
                       </p>
                       <div className="flex flex-1 justify-end">
+                      <p className="m-0 pl-10 text-gray-900 font-semibold">
+                          {item.quantity}
+                        </p>
                         <p className="m-0 pl-10 text-gray-900 font-semibold">
                           {item.price + DENOMINATION}
                         </p>
