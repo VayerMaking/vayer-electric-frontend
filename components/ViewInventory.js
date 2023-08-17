@@ -61,7 +61,23 @@ class ViewInventory extends React.Component {
     this.setState({ editingIndex: null, inventory })
   }
   deleteItem = async index => {
+    const currentItem = this.state.inventory[index]
     const inventory = [...this.state.inventory.slice(0, index), ...this.state.inventory.slice(index + 1)]
+
+
+    try{
+      console.log(this.state)
+      console.log(currentItem)
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/products/${currentItem.id}`)
+
+      if (response.status === 200) {
+        alert('Item deleted successfully');
+      }
+    } catch (error) {
+      console.error('Error making DELETE request:', error);
+      throw error;
+    }
+
     this.setState({ inventory })
   }
   onChange = event => {
