@@ -7,6 +7,7 @@ import { slugify } from '../utils/helpers'
 import { FaTimes } from 'react-icons/fa'
 import { fetchProducts } from '../utils/productProvider'
 import * as consts from '../consts/consts'
+import axios from 'axios'
 
 class ViewInventory extends React.Component {
   state = {
@@ -35,7 +36,28 @@ class ViewInventory extends React.Component {
   saveItem = async index => {
     const inventory = [...this.state.inventory]
     inventory[index] = this.state.currentItem
+    const currentItem = this.state.currentItem
     // update item in database
+    console.log(this.state.currentItem, index, inventory)
+    try {
+      const data = {
+        name: currentItem.name,
+        price: parseFloat(currentItem.price),
+        current_inventory: parseInt(currentItem.current_inventory),
+      };
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/products/${currentItem.id}`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === 200) {
+        alert('Item updated successfully');
+      }
+    } catch (error) {
+      console.error('Error making POST request:', error);
+      throw error;
+    }
     this.setState({ editingIndex: null, inventory })
   }
   deleteItem = async index => {
@@ -65,7 +87,7 @@ class ViewInventory extends React.Component {
                   <div className="flex items-center">
                     <Link href={`/products/${slugify(item.name)}`}>
                       <a aria-label={item.name}>
-                        <Image className="w-32 m-0" src={item.image_url} alt={item.name} />
+                        <Image className="w-32 m-0" src={`${consts.IMAGES_BASE_URL}/${item.image_url}`} alt={item.name} />
                       </a>
                     </Link>
                     <input
