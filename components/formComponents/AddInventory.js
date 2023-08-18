@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 
 const initialState = {
-  name: '', brand: '', price: '', subcategory: '', image: '', description: '', currentInventory: '', sku: ''
+  name: '', brand: '', price: '', subcategory: '', image: '', description: '', currentInventory: '', sku: '', subcategories: []
 }
 
 class AddInventory extends React.Component {
@@ -11,7 +11,7 @@ class AddInventory extends React.Component {
     this.setState(() => (initialState))
   }
   onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value})
+    this.setState({ [e.target.name]: e.target.value })
   }
   onImageChange = async (e) => {
     const file = e.target.files[0];
@@ -41,7 +41,7 @@ class AddInventory extends React.Component {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       if (response.status === 200) {
         this.clearForm()
       }
@@ -52,6 +52,25 @@ class AddInventory extends React.Component {
 
     this.clearForm()
   }
+
+  fetchSubcategories = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/subcategories`)
+
+    if (response.status !== 200) {
+      throw new Error('Error fetching subcategories')
+    }
+
+    const subcategories = response.data.map((subcategory) => {
+      return subcategory.name
+    })
+
+    this.setState({ subcategories })
+  }
+
+  async componentDidMount() {
+    await this.fetchSubcategories()
+  }
+
   render() {
     const {
       name, brand, price, subcategory, image, description, currentInventory, sku
@@ -67,24 +86,24 @@ class AddInventory extends React.Component {
                   Item name
                 </label>
                 <input
-                onChange={this.onChange}
-                value={name} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Item name" name="name" />
+                  onChange={this.onChange}
+                  value={name} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Item name" name="name" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">
                   Item price
                 </label>
                 <input
-                onChange={this.onChange}
-                value={price} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="price" type="text" placeholder="Item price" name="price" />
+                  onChange={this.onChange}
+                  value={price} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="price" type="text" placeholder="Item price" name="price" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
                   Item Description
                 </label>
                 <input
-                onChange={this.onChange}
-                value={description} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="description" placeholder="Item Description" name="description" />
+                  onChange={this.onChange}
+                  value={description} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="description" placeholder="Item Description" name="description" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="item image">
@@ -100,32 +119,43 @@ class AddInventory extends React.Component {
                   In stock
                 </label>
                 <input
-                onChange={this.onChange}
-                value={currentInventory} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="currentInventory" placeholder="Items in stock" name="currentInventory" />
+                  onChange={this.onChange}
+                  value={currentInventory} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="currentInventory" placeholder="Items in stock" name="currentInventory" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="categories">
-                  Item categories
+                  Item subcategory
                 </label>
-                <input
-                onChange={this.onChange}
-                value={subcategory} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="subacategory" placeholder="Comma separated list of item categories" name="subcategory" />
+                <select
+                  onChange={this.onChange}
+                  value={subcategory}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  id="subcategory"
+                  name="subcategory"
+                >
+                  <option value="">Select an option</option>
+                  {this.state.subcategories.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brand">
                   Item brand
                 </label>
                 <input
-                onChange={this.onChange}
-                value={brand} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="brand" placeholder="Item brand" name="brand" />
+                  onChange={this.onChange}
+                  value={brand} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="brand" placeholder="Item brand" name="brand" />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sku">
                   Sku
                 </label>
                 <input
-                onChange={this.onChange}
-                value={sku} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="sku" placeholder="Item sku" name="sku" />
+                  onChange={this.onChange}
+                  value={sku} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="sku" placeholder="Item sku" name="sku" />
               </div>
               <div className="flex items-center justify-between mt-4">
                 <button onClick={this.addItem} className="bg-primary hover:bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
