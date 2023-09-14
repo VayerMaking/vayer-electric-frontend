@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/filterMenu.css'
 import Layout from '../layouts/layout'
 import {fetchCategoriesNameArray} from '../utils/categoryProvider'
 

@@ -1,0 +1,48 @@
+/* Category.module.css */
+.filterMenu {
+    flex: 1;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  .filterOption {
+    margin-bottom: 1rem;
+  }
+  
+  .filterOption h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .filterOption ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .filterOption li {
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+  }
+  
+  .filterOption li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .filterOption li.selected {
+    background-color: #4285f4;
+    color: #fff;
+  }
+  
+  .pageContainer {
+    display: flex;
+  }
+    
+  .productList {
+    flex: 3;
+    padding: 1rem;
+    /* Adjust other styling properties as needed */
+  }
